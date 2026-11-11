@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رسائل سرية لطالباتي | أ. آمنة الموسى</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(180deg, #FDF2F8 0%, #F5F3FF 100%);
+            min-height: 100vh;
+        }
+
+        .card-glow {
+            box-shadow: 0 10px 30px -5px rgba(236, 72, 153, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-glow:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px -5px rgba(236, 72, 153, 0.25);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .floating-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .modal-fade {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="py-8 px-4 sm:px-6 lg:px-8 text-gray-800 flex flex-col items-center justify-start min-h-screen">
+
+    <!-- Container -->
+    <div class="max-w-md w-full mx-auto space-y-6">
+
+        <!-- Header Section -->
+        <div class="text-center space-y-3 pt-4">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-100/80 border border-pink-200 text-pink-700 text-sm font-bold shadow-sm">
+                <i class="fa-solid fa-heart text-pink-500 text-xs"></i>
+                إهداء خاص من أ. آمنة الموسى
+                <i class="fa-solid fa-heart text-pink-500 text-xs"></i>
+            </div>
+
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-purple-950 tracking-tight leading-tight">
+                «هناك رسالة سرية..»
+            </h1>
+            
+            <p class="text-lg font-bold text-pink-600">
+                معكِ رسالة مميزة، كُتبت لكِ وحدكِ.
+            </p>
+
+            <p class="text-sm text-gray-600 leading-relaxed max-w-sm mx-auto px-2">
+                بعض الكلمات تشبه الهدايا، وهذه الكلمات كُتبت من أجلِك لتنير دربك وتلهم قلبك. 💌✨
+            </p>
+
+            <div class="pt-4 flex items-center justify-center gap-2">
+                <span class="h-[2px] w-8 bg-pink-300 rounded-full"></span>
+                <p class="text-base font-bold text-gray-700">
+                    اكتشفي اسمكِ لفتح رسالتكِ المفاجئة ✨
+                </p>
+                <span class="h-[2px] w-8 bg-pink-300 rounded-full"></span>
+            </div>
+        </div>
+
+        <!-- Student Cards Grid -->
+        <div class="space-y-4 pt-2" id="studentsList">
+            <!-- Cards will be generated inline for instant rendering -->
+        </div>
+
+        <div class="text-center pt-8 pb-4 text-xs text-pink-400 font-medium">
+            صُنعت بكل حُب من أجل طالباتي المتميزات ❤️
+        </div>
+    </div>
+
+    <!-- Modal for Secret Message -->
+    <div id="messageModal" onclick="closeModalOnBg(event)" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center relative card-glow modal-fade border-4 border-pink-100" onclick="event.stopPropagation()">
+            
+            <button onclick="closeModal()" class="absolute top-4 left-4 w-9 h-9 bg-pink-50 hover:bg-pink-100 text-pink-600 rounded-full flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="w-20 h-20 bg-gradient-to-tr from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-pink-200 floating-icon">
+                <i class="fa-solid fa-envelope-open-text text-3xl text-white"></i>
+            </div>
+
+            <span class="text-xs font-bold text-pink-500 bg-pink-50 px-3 py-1 rounded-full uppercase tracking-wider">رسالة خاصة وحصرية</span>
+            <h3 id="modalStudentName" class="text-2xl font-extrabold text-purple-950 mt-2 mb-3">اسم الطالبة</h3>
+            
+            <div class="w-12 h-1 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full mx-auto mb-4"></div>
+
+            <div class="bg-gradient-to-b from-pink-50/50 to-purple-50/30 rounded-2xl p-4 border border-pink-100/60 mb-5">
+                <p id="modalMessage" class="text-gray-700 leading-relaxed text-sm font-semibold">
+                    محتوى الرسالة...
+                </p>
+            </div>
+
+            <div class="text-left pt-2 border-t border-gray-100 flex items-center justify-between">
+                <span class="text-xs text-pink-400 font-semibold">بكل فخر ومحبة 💖</span>
+                <span class="text-xs font-bold text-purple-900 bg-purple-50 px-3 py-1 rounded-lg">معلمتكِ: آمنة الموسى</span>
+            </div>
+            
+            <button onclick="closeModal()" class="mt-6 w-full py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold rounded-xl shadow-md shadow-pink-200 hover:opacity-95 transition-opacity">
+                إغلاق الرسالة 💕
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const students = [
+            {
+                name: "فاطمة العرب",
+                gradient: "from-pink-500 to-rose-500",
+                shadow: "shadow-pink-200",
+                message: "لكِ وحدكِ يا فاطمة.. وجودكِ في الصف يضيف دائماً لمسة من الهدوء والتميز. ذكاؤكِ واجتهادكِ يثيران إعجابي دائماً. استمري في هذا التألق، فأنتِ قادرة على الوصول للقمم!"
+            },
+            {
+                name: "ريل احمد",
+                gradient: "from-indigo-500 to-purple-500",
+                shadow: "shadow-purple-200",
+                message: "لكِ وحدكِ يا ريل.. شغفكِ بالتعلم وحرصكِ على التفوق يجعلاني فخورة بكِ كل يوم. لديكِ طاقة إيجابية تسعد من حولكِ، ثقي بنفسكِ وبقدراتكِ الرائعة دائماً."
+            },
+            {
+                name: "زينب عامر",
+                gradient: "from-purple-500 to-pink-500",
+                shadow: "shadow-purple-200",
+                message: "لكِ وحدكِ يا زينب.. حضوركِ اللطيف واجتهادكِ المستمر يعكسان روحاً طموحة لا ترضى إلا بالأفضل. أرى فيكِ مستقبلاً باهراً، واصلي مسيرتكِ بنفس الهمة والجمال."
+            },
+            {
+                name: "سلمى السمين",
+                gradient: "from-rose-500 to-pink-600",
+                shadow: "shadow-pink-200",
+                message: "لكِ وحدكِ يا سلمى.. تذكرينني دائماً بأن العزيمة والحرص يصنعان التميز. اهتمامكِ وتفاعلكِ الرائع يجعل لحصتنا طعماً مختلفاً. شكراً لأنكِ طالبة متميزة بكل المقاييس."
+            },
+            {
+                name: "ريما الجبران",
+                gradient: "from-fuchsia-500 to-purple-600",
+                shadow: "shadow-fuchsia-200",
+                message: "لكِ وحدكِ يا ريما.. ابتسامتكِ ودقتكِ في العمل تعطي انطباعاً بوعيكِ وعقلكِ الراقي. أدبكِ واجتهادكِ يجعلا اسمكِ محفوراً بالجمال في قلبي. واصلي السعي فنجمكِ يسطع باستمرار."
+            },
+            {
+                name: "رباب الهاشم",
+                gradient: "from-violet-500 to-purple-600",
+                shadow: "shadow-violet-200",
+                message: "لكِ وحدكِ يا رباب.. هدوؤكِ الممزوج بالإصرار والذكاء يجعل منكِ طالبة استثنائية. أنتِ تملكين حس المسؤولية والتميز، وأتوقع لكِ إنجازات عظيمة في المستقبل."
+            },
+            {
+                name: "نور بوشفيع",
+                gradient: "from-pink-500 to-purple-500",
+                shadow: "shadow-pink-200",
+                message: "لكِ وحدكِ يا نور.. اسمٌ على مسمى، فأنتِ تضيفين نوراً وحيوية لصفنا. تفاعلكِ الشغوف ومحاولاتكِ المستمرة تجعلكِ من الطالبات اللاتي يُعتز بهن. لا تتوقفي عن التطلع للأعلى!"
+            },
+            {
+                name: "شهد السويلم",
+                gradient: "from-rose-400 to-pink-500",
+                shadow: "shadow-rose-200",
+                message: "لكِ وحدكِ يا شهد.. كاسمكِ دائماً، تتركين أثراً طيباً ولطيفاً في كل مشاركة. إصراركِ على الفهم والتميز دليل على عقليتكِ الناضجة وطموحكِ الكبير. فخورة بكِ جداً."
+            },
+            {
+                name: "ملاك يحيى",
+                gradient: "from-purple-500 to-indigo-600",
+                shadow: "shadow-indigo-200",
+                message: "لكِ وحدكِ يا ملاك.. لطفكِ وأخلاقكِ العالية جنباً إلى جنب مع حرصكِ الدراسي يجعلا منكِ نبعاً من الإلهام. استمري بنفس هذا الشغف والنقاء، فالمستقبل ينتظركِ بشوق."
+            },
+            {
+                name: "ايلين الهاشم",
+                gradient: "from-pink-500 to-rose-600",
+                shadow: "shadow-pink-200",
+                message: "لكِ وحدكِ يا ايلين.. تميزكِ وإبداعكِ اللافت يعكسان شخصيتكِ الرائعة. تذكري دائماً أنكِ تملكين موهبة وقدرة على تحقيق كل ما تطمحين إليه. فخورة بوجودكِ ضمن طالباتي."
+            }
+        ];
+
+        function renderCards() {
+            const container = document.getElementById('studentsList');
+            if(!container) return;
+            container.innerHTML = '';
+            
+            students.forEach((student, index) => {
+                const card = document.createElement('div');
+                card.className = `bg-white/90 backdrop-blur-md rounded-3xl p-4 flex items-center justify-between border border-white card-glow cursor-pointer transition-all hover:bg-pink-50/50 active:scale-95`;
+                card.setAttribute('onclick', `openModalByIndex(${index})`);
+                
+                card.innerHTML = `
+                    <div class="text-pink-400 pl-2">
+                        <i class="fa-solid fa-chevron-left text-lg"></i>
+                    </div>
+                    <div class="text-right flex-1 pr-3">
+                        <span class="text-xs font-bold text-pink-500 block mb-0.5">رسالة سرية</span>
+                        <h2 class="text-xl font-extrabold text-gray-800 tracking-tight">${student.name}</h2>
+                        <p class="text-xs text-gray-500 font-medium flex items-center gap-1 mt-0.5">
+                            اضغطي لفتح الرسالة المخصصة لكِ 💌
+                        </p>
+                    </div>
+                    <div class="w-14 h-14 bg-gradient-to-tr ${student.gradient} rounded-2xl flex items-center justify-center ${student.shadow} shadow-md shrink-0">
+                        <i class="fa-solid fa-envelope-circle-check text-white text-2xl"></i>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        function openModalByIndex(index) {
+            const student = students[index];
+            document.getElementById('modalStudentName').innerText = student.name;
+            document.getElementById('modalMessage').innerText = student.message;
+            document.getElementById('messageModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('messageModal').classList.add('hidden');
+        }
+
+        function closeModalOnBg(e) {
+            closeModal();
+        }
+
+        // Run setup immediately
+        renderCards();
+    </script>
+</body>
+</html>
